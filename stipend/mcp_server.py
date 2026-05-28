@@ -39,6 +39,7 @@ from stipend.errors import (
     PolicyConfigError,
     PolicyDenied,
 )
+from stipend.receipt import Receipt
 
 MCP_PROTOCOL_VERSION = "2024-11-05"
 SERVER_NAME = "stipend"
@@ -334,8 +335,8 @@ def _tool_result(payload: Any) -> dict[str, Any]:
     }
 
 
-def _receipt_to_dict(receipt: Any) -> dict[str, Any]:
-    return asdict(receipt) if is_dataclass(receipt) else dict(receipt)
+def _receipt_to_dict(receipt: Receipt) -> dict[str, Any]:
+    return asdict(receipt)
 
 
 def _audit_entry_to_dict(entry: AuditEntry) -> dict[str, Any]:
@@ -369,6 +370,6 @@ def _json_default(value: Any) -> Any:
     """Serialize datetimes and other dataclasses for the wire."""
     if hasattr(value, "isoformat"):
         return value.isoformat()
-    if is_dataclass(value):
+    if is_dataclass(value) and not isinstance(value, type):
         return asdict(value)
     return str(value)

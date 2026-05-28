@@ -34,7 +34,7 @@ from __future__ import annotations
 import fnmatch
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import jsonschema
 import yaml
@@ -104,7 +104,9 @@ class Policy:
                 f"policy file must contain a YAML object at the top level, got "
                 f"{type(data).__name__}"
             )
-        return cls.from_dict(data)
+        # yaml.safe_load returns Any; after the dict check we trust schema
+        # validation in from_dict() to enforce the rest of the shape.
+        return cls.from_dict(cast(dict[str, Any], data))
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Policy:
@@ -143,18 +145,21 @@ class Policy:
         return list(self.raw.get("recipients", {}).get("blocked", []))
 
     def _cap(self, key: str, currency: str) -> int | None:
-        limits = self.raw.get("limits") or {}
-        return (limits.get(key) or {}).get(currency)
+        limits: dict[str, Any] = self.raw.get("limits") or {}
+        bucket: dict[str, int] = limits.get(key) or {}
+        return bucket.get(currency)
 
     def _currency_map(self, *path: str) -> dict[str, int]:
         cursor: Any = self.raw
         for p in path:
-            cursor = (cursor or {}).get(p)
+            if not isinstance(cursor, dict):
+                return {}
+            cursor = cursor.get(p)  # type: ignore[unknownArgumentType]
             if cursor is None:
                 return {}
         if not isinstance(cursor, dict):
             return {}
-        return cursor
+        return cast(dict[str, int], cursor)
 
 
 class PolicyEngine:

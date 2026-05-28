@@ -38,6 +38,11 @@ from typing import Any
 AUDIT_SCHEMA_VERSION = 1
 
 
+def _empty_extra() -> dict[str, Any]:
+    """Typed factory for AuditEntry.extra (gives pyright a real signature)."""
+    return {}
+
+
 class AuditWriteError(Exception):
     """Raised when an audit-log write fails (disk full, fsync error, etc.).
 
@@ -84,7 +89,7 @@ class AuditEntry:
     receipt_id: str | None = None
     error: str | None = None
     parent_audit_id: str | None = None
-    extra: dict[str, Any] = field(default_factory=dict)
+    extra: dict[str, Any] = field(default_factory=_empty_extra)
 
     def to_jsonl(self) -> str:
         """Serialize to a single JSONL line including trailing newline."""
