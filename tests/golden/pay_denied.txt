@@ -1,0 +1,6 @@
+> Pay sanctioned-co $4,250 for payoff
+
+[resolve]   counterparty=sanctioned-co  →  (unresolved)
+[policy]    recipient 'sanctioned-co' matches blocked pattern 'sanctioned-*'
+
+Denied. Reason: recipient 'sanctioned-co' matches blocked pattern 'sanctioned-*'

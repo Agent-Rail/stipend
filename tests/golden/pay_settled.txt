@@ -1,0 +1,8 @@
+[resolve]   counterparty=acme-logistics  →  acme_2cQ8wxyz…
+[policy]    per_txn $25,000  ✓   daily  $4,250 / $250,000  ✓
+[rail]      MOCK_ACH         ✓   ETA 2.4s simulated
+[payment]   pmt_mock_9bD4…   created  status=pending
+[payment]   pmt_mock_9bD4…   settled  net $4,249.75 (mock)
+[audit]     written to .stipend/audit.jsonl
+
+Sent (mock). Receipt id: pmt_mock_9bD4…

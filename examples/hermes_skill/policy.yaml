@@ -1,0 +1,10 @@
+version: 1
+agent: hermes-carrier-bot
+limits:
+  per_transaction_cap: { USD: 25_000_00 }
+  daily_cap:           { USD: 100_000_00 }
+recipients:
+  allowed: ["carrier-*"]
+  blocked: ["sanctioned-*"]
+approvals:
+  requires_approval_above: { USD: 10_000_00 }

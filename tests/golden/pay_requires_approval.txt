@@ -1,0 +1,6 @@
+> Pay Acme Logistics $12,000 for vendor deposit
+
+[resolve]   counterparty=acme-logistics  →  (unresolved)
+[policy]    amount $12,000 is at or above the approval threshold $10,000
+
+Requires approval. v0.1 returns this decision but does not resubmit; resolve out-of-band.

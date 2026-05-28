@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/agent-rail/stipend/schemas/policy.schema.json",
+  "title": "Stipend Policy",
+  "description": "Schema for a Stipend policy.yaml file. v0.1 enforces USD-only and ignores the velocity field (reserved for v0.2).",
+  "type": "object",
+  "required": ["version", "agent"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "integer",
+      "enum": [1],
+      "description": "Policy file format version."
+    },
+    "agent": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier for the agent this policy applies to. Captured into audit entries for traceability."
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "per_transaction_cap": { "$ref": "#/definitions/currency_amount_map" },
+        "daily_cap": { "$ref": "#/definitions/currency_amount_map" },
+        "monthly_cap": { "$ref": "#/definitions/currency_amount_map" }
+      }
+    },
+    "recipients": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "blocked": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "velocity": {
+      "type": "object",
+      "description": "v0.2 feature. Field is reserved here so existing files do not break when velocity ships; the v0.1 engine accepts but does NOT enforce these limits.",
+      "additionalProperties": false,
+      "properties": {
+        "max_per_minute": { "type": "integer", "minimum": 1 },
+        "max_per_hour": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "approvals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requires_approval_above": { "$ref": "#/definitions/currency_amount_map" }
+      }
+    }
+  },
+  "definitions": {
+    "currency_amount_map": {
+      "type": "object",
+      "description": "A map of ISO-4217 currency code to integer cents. v0.1 enforces USD only; non-USD keys are accepted at validate time but the engine denies transactions that reference them.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Z]{3}$": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

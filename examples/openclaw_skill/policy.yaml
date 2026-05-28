@@ -1,0 +1,7 @@
+version: 1
+agent: openclaw-task-bot
+limits:
+  per_transaction_cap: { USD: 5_00 }
+  daily_cap:           { USD: 50_00 }
+recipients:
+  allowed: ["tool-*"]

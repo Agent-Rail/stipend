@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "stipend": {
+      "command": "stipend",
+      "args": [
+        "mcp",
+        "--policy",
+        "/path/to/your/policy.yaml",
+        "--root",
+        "/path/to/your/.stipend"
+      ]
+    }
+  }
+}
